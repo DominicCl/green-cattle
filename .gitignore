@@ -1,0 +1,18 @@
+# Virtual environment
+venv/
+
+# Dataset — too large for GitHub
+data/raw/
+data/processed/
+
+# Python cache files
+__pycache__/
+*.pyc
+*.pyo
+.DS_Store
+
+# Model weights (large files)
+models/
+
+# Jupyter checkpoints
+.ipynb_checkpoints/
