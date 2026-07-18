@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Green Cattle — CH4 Breeding Advisor</title>
+  <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+  <header>
+    <div class="logo">🐄 Green Cattle</div>
+    <p class="tagline">AI-powered methane risk scoring and breeding recommendations</p>
+  </header>
+
+  <div id="screen-upload" class="screen active">
+    <div class="card upload-card">
+      <h2>Upload your herd photos</h2>
+      <p class="muted">Create a ZIP file containing one photo per cow. JPEG, PNG, or WebP. Max 100 cows per session.</p>
+      <div class="drop-zone" id="drop-zone">
+        <div class="drop-icon">📁</div>
+        <p>Drag &amp; drop your ZIP file here</p>
+        <p class="muted">or</p>
+        <label class="btn btn-primary">Choose file<input type="file" id="file-input" accept=".zip" hidden></label>
+        <p id="file-name" class="file-name muted"></p>
+      </div>
+      <button class="btn btn-green btn-large" id="upload-btn" disabled>Analyse herd →</button>
+      <div class="disclaimer"><strong>Important:</strong> This tool provides breed-typical methane risk estimates based on visual analysis. It does not replace real methane sensor measurements.</div>
+    </div>
+  </div>
+
+  <div id="screen-analyzing" class="screen">
+    <div class="card center-card">
+      <div class="spinner"></div>
+      <h2 id="analyzing-title">Analysing your herd...</h2>
+      <p class="muted" id="analyzing-sub">Running visual analysis on each cow photo</p>
+      <div class="progress-bar"><div class="progress-fill" id="progress-fill"></div></div>
+    </div>
+  </div>
+
+  <div id="screen-sex" class="screen">
+    <div class="card">
+      <h2>Identify your cows</h2>
+      <p class="muted">Select whether each cow is a Dam (female) or Sire (male). Only Dam x Sire pairs will be recommended for breeding.</p>
+      <div id="sex-grid"></div>
+      <div class="records-actions">
+        <button class="btn btn-green btn-large" id="confirm-sex">Continue to farm records →</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="screen-records" class="screen">
+    <div class="card">
+      <h2>Add farm records <span class="badge-optional">optional</span></h2>
+      <p class="muted">Providing farm records improves accuracy. Skip any data you don't have.</p>
+      <div class="records-nav">
+        <button class="btn btn-sm" id="prev-cow" disabled>← Previous</button>
+        <span id="cow-counter">Cow 1 of N</span>
+        <button class="btn btn-sm" id="next-cow">Next →</button>
+      </div>
+      <div id="cow-record-form"></div>
+      <div class="records-actions">
+        <button class="btn btn-outline" id="skip-all-records">Skip all records</button>
+        <button class="btn btn-green" id="finish-records">Get breeding recommendations →</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="screen-results" class="screen">
+    <div class="results-header">
+      <h2>Herd Analysis Results</h2>
+      <div style="display:flex;gap:10px;">
+        <button class="btn btn-green btn-sm" id="download-report">⬇ Download report</button>
+        <button class="btn btn-outline btn-sm" id="start-over">Start over</button>
+      </div>
+    </div>
+    <div class="card">
+      <h3>Individual cow scores</h3>
+      <p class="muted">Sorted from lowest (best) to highest (worst) methane risk</p>
+      <table id="herd-table">
+        <thead><tr><th>Rank</th><th>Cow</th><th>Sex</th><th>CH4 Risk Score</th><th>Data source</th><th>Confidence</th></tr></thead>
+        <tbody id="herd-tbody"></tbody>
+      </table>
+    </div>
+    <div class="card">
+      <h3>Breeding recommendations — all Dam x Sire pairs</h3>
+      <p class="muted">Ranked by predicted offspring methane risk — lower is better</p>
+      <table id="pairs-table">
+        <thead><tr><th>Rank</th><th>Dam ♀</th><th>Sire ♂</th><th>Predicted offspring risk</th><th>Uncertainty</th></tr></thead>
+        <tbody id="pairs-tbody"></tbody>
+      </table>
+    </div>
+    <div class="card">
+      <h3>Breeding tree — top 5 pairs</h3>
+      <p class="muted">Visual overview of top recommended Dam x Sire pairings</p>
+      <div id="breeding-tree-svg"></div>
+    </div>
+    <div class="disclaimer"><strong>Disclaimer:</strong> These recommendations are based on breed-typical proxy labels and simplified additive genetic modelling. For real on-farm breeding decisions, consult a livestock genetics specialist.</div>
+  </div>
+
+  <script src="/static/app.js"></script>
+</body>
+</html>
