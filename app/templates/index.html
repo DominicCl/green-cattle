@@ -7,6 +7,7 @@
   <link rel="stylesheet" href="/static/style.css">
 </head>
 <body>
+
   <header>
     <div class="logo">🐄 Green Cattle</div>
     <p class="tagline">AI-powered methane risk scoring and breeding recommendations</p>
@@ -20,7 +21,10 @@
         <div class="drop-icon">📁</div>
         <p>Drag &amp; drop your ZIP file here</p>
         <p class="muted">or</p>
-        <label class="btn btn-primary">Choose file<input type="file" id="file-input" accept=".zip" hidden></label>
+        <label class="btn btn-primary">
+          Choose file
+          <input type="file" id="file-input" accept=".zip" hidden>
+        </label>
         <p id="file-name" class="file-name muted"></p>
       </div>
       <button class="btn btn-green btn-large" id="upload-btn" disabled>Analyse herd →</button>
@@ -30,7 +34,7 @@
 
   <div id="screen-analyzing" class="screen">
     <div class="card center-card">
-      <div class="spinner"></div>
+      <div class="cow-spin-wrap">🐄</div>
       <h2 id="analyzing-title">Analysing your herd...</h2>
       <p class="muted" id="analyzing-sub">Running visual analysis on each cow photo</p>
       <div class="progress-bar"><div class="progress-fill" id="progress-fill"></div></div>
@@ -88,6 +92,7 @@
         <thead><tr><th>Rank</th><th>Dam ♀</th><th>Sire ♂</th><th>Predicted offspring risk</th><th>Uncertainty</th></tr></thead>
         <tbody id="pairs-tbody"></tbody>
       </table>
+      <p class="muted" id="pairs-note" style="margin-top:12px;"></p>
     </div>
     <div class="card">
       <h3>Breeding tree — top 5 pairs</h3>
