@@ -30,6 +30,20 @@ app.config['MAX_CONTENT_LENGTH'] = 200 * 1024 * 1024  # 200MB max upload
 MODELS_DIR = Path(__file__).parent.parent / 'models'
 ALLOWED_EXTENSIONS = {'.jpg', '.jpeg', '.png', '.webp'}
 
+# Download model from Hugging Face Hub if not present locally
+MODEL_PATH = MODELS_DIR / 'green_cattle_best.pth'
+if not MODEL_PATH.exists():
+    print('Model not found locally, downloading from Hugging Face...')
+    from huggingface_hub import hf_hub_download
+    MODELS_DIR.mkdir(exist_ok=True)
+    downloaded_path = hf_hub_download(
+        repo_id='DomClout/green-cattle-model',
+        filename='green_cattle_best.pth'
+    )
+    import shutil
+    shutil.copy(downloaded_path, MODEL_PATH)
+    print('Model downloaded successfully!')
+
 # Load model once at startup
 device = torch.device('mps') if torch.backends.mps.is_available() else torch.device('cpu')
 
