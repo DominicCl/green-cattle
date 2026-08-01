@@ -31,7 +31,7 @@ class GreenCattleModel(nn.Module):
     that defines how data flows through the network.
     """
 
-    def __init__(self, num_formulas=23, freeze_backbone=True):
+    def __init__(self, num_formulas=23, freeze_backbone=True, pretrained=True):
         """
         __init__ is called when you create the model object.
         It defines all the layers — but doesn't run any data yet.
@@ -44,11 +44,12 @@ class GreenCattleModel(nn.Module):
         super(GreenCattleModel, self).__init__()
 
         # ── VISUAL STREAM ─────────────────────────────────────────
-        # Load ResNet50 with pretrained ImageNet weights
-        # This gives us 25 million weights already trained on
-        # 1.2 million photos — we get all that knowledge for free
+        # Load ResNet50, optionally with pretrained ImageNet weights.
+        # Skip the download entirely when loading our own trained
+        # checkpoint afterward anyway (saves memory + bandwidth at
+        # inference time on memory-constrained servers)
         backbone = models.resnet50(
-            weights=models.ResNet50_Weights.IMAGENET1K_V1
+            weights=models.ResNet50_Weights.IMAGENET1K_V1 if pretrained else None
         )
 
         # Freeze all layers if requested — they won't update
@@ -165,11 +166,12 @@ class GreenCattleModel(nn.Module):
         return output
 
 
-def build_model(freeze_backbone=True):
+def build_model(freeze_backbone=True, pretrained=True):
     """Convenience function to create the model"""
     return GreenCattleModel(
         num_formulas=23,
-        freeze_backbone=freeze_backbone
+        freeze_backbone=freeze_backbone,
+        pretrained=pretrained
     )
 
 

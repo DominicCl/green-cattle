@@ -48,8 +48,14 @@ if not MODEL_PATH.exists():
 # Load model once at startup
 device = torch.device('mps') if torch.backends.mps.is_available() else torch.device('cpu')
 
+import resource
+def log_mem(label):
+    mb = resource.getrusage(resource.RUSAGE_SELF).ru_maxrss / 1024
+    print(f'[MEM] {label}: {mb:.1f} MB', flush=True)
+
+log_mem('before model load')
 print("Loading Green Cattle model...")
-model = build_model(freeze_backbone=False)
+model = build_model(freeze_backbone=False, pretrained=False)
 model.load_state_dict(
     torch.load(MODELS_DIR / 'green_cattle_best.pth',
                map_location=device, weights_only=True)
@@ -57,6 +63,7 @@ model.load_state_dict(
 model = model.to(device)
 model.eval()
 print(f"Model loaded on {device}")
+log_mem('after model load')
 
 # ── Helper functions ──────────────────────────────────────────────
 def score_image(img_path, formula_vec=None):
@@ -148,6 +155,8 @@ def analyze():
     # Score each image visually
     cows = []
     for i, img_path in enumerate(sorted(image_files)):
+        if i % 5 == 0:
+            log_mem(f'analyzing image {i}')
         try:
             low_ch4_prob, confidence = score_image(img_path)
             cows.append({
